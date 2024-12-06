@@ -1,0 +1,38 @@
+name: Network Updater
+
+on:
+  push:
+    branches:
+      - main # Substitua pelo nome da sua branch principal, se for diferente
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Configurar Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11  # Substitua pela versão do Python que você usa
+
+      # Instalar dependências
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Rodar o script para gerar o HTML
+      - name: Run main.py
+        run: python main.py
+
+      # Deploy para o GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs # Substitua pelo diretório onde o HTML é gerado
